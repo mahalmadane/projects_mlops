@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/__init__.py
+src/data/__init__.py
+src/data/strategie_analyses.py
+src/data/strategie_bivarie.py
+src/data/strategie_multivarie.py
+src/data/strategie_univarie.py
+src/end_to_end_mlops.egg-info/PKG-INFO
+src/end_to_end_mlops.egg-info/SOURCES.txt
+src/end_to_end_mlops.egg-info/dependency_links.txt
+src/end_to_end_mlops.egg-info/requires.txt
+src/end_to_end_mlops.egg-info/top_level.txt
+src/models/evaluate.py
+src/models/predict.py
+src/models/training.py

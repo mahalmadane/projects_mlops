@@ -1,0 +1,10 @@
+[project]
+name = "end_to_end_mlops"
+version = "0.1.0"
+description = "End-to-end MLOps project"
+authors = [{ name = "Abba Toure" }]
+dependencies = ["pandas", "scikit-learn"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

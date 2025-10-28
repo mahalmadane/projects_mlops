@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: end_to_end_mlops
+Version: 0.1.0
+Summary: End-to-end MLOps project
+Author: Abba Toure
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
