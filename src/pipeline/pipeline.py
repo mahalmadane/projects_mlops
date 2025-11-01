@@ -8,19 +8,32 @@ from zenml import pipeline
 from src.pipeline.steps.load import split, load_data
 from src.pipeline.steps.training import training_Lg, training_Kn
 from src.pipeline.steps.evaluation import evaluation
-from src.pipeline.steps.preprocessing import preprocess
+from src.pipeline.steps.missing_value import missing_value
 import pandas as pd
 
 
 
-@pipeline
+@pipeline(name="my_clean_training_pipeline")
 def my_pipeline():
+
+    # Chargement des données
     df = load_data()
-    x_train, x_test, y_train, y_test = split(df)  # ZenML décompose automatiquement le NamedTuple
-    lgmodel = training_Lg(x_train, y_train)
-    knmodel = training_Kn(x_train, y_train)
-    accuracy_bestScore = evaluation(lgmodel, knmodel, x_test, y_test)
-    return accuracy_bestScore
+
+    # missing values management
+    df = missing_value(df)
+
+    # Outlier management
+
+    # # Split
+    # x_train, x_test, y_train, y_test = split(df)  # ZenML décompose automatiquement le NamedTuple
+
+    # # Training
+    # lgmodel = training_Lg(x_train, y_train)
+    # knmodel = training_Kn(x_train, y_train)
+
+    # # Evaluation
+    # accuracy_bestScore = evaluation(lgmodel, knmodel, x_test, y_test)
+    # return accuracy_bestScore
 
 
 

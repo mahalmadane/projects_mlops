@@ -1,7 +1,18 @@
 Metadata-Version: 2.4
 Name: end_to_end_mlops
 Version: 0.1.0
-Summary: End-to-end MLOps project
-Author: Abba Toure
+Summary: End-to-End MLOps project with ZenML
+Author-email: Toure <touremahalmadane250@gmail.com>
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
 Requires-Dist: pandas
 Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Requires-Dist: zenml
+Requires-Dist: joblib
+Requires-Dist: mlflow
+
+# projects_mlops

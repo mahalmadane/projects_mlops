@@ -1,10 +1,26 @@
 [project]
 name = "end_to_end_mlops"
 version = "0.1.0"
-description = "End-to-end MLOps project"
-authors = [{ name = "Abba Toure" }]
-dependencies = ["pandas", "scikit-learn"]
+description = "End-to-End MLOps project with ZenML"
+authors = [
+  { name = "Toure", email = "touremahalmadane250@gmail.com" }
+]
+readme = "README.md"
+license = { text = "MIT" }
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires-python = ">=3.8"
+
+dependencies = [
+        "numpy",
+        "pandas",
+        "scikit-learn",
+        "matplotlib",
+        "seaborn",
+        "zenml",
+        "joblib",
+        "mlflow",
+        "logging",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

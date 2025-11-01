@@ -12,8 +12,6 @@ src/end_to_end_mlops.egg-info/SOURCES.txt
 src/end_to_end_mlops.egg-info/dependency_links.txt
 src/end_to_end_mlops.egg-info/requires.txt
 src/end_to_end_mlops.egg-info/top_level.txt
-src/features/__init__.py
-src/features/strategie_feature.py
 src/models/__init__.py
 src/models/evaluate.py
 src/models/predict.py
@@ -22,5 +20,19 @@ src/pipeline/deplloyement_pipeline.py
 src/pipeline/pipeline.py
 src/pipeline/steps/__init__.py
 src/pipeline/steps/evaluation.py
+src/pipeline/steps/feature_eng.py
 src/pipeline/steps/load.py
+src/pipeline/steps/missing_value.py
+src/pipeline/steps/outlier_detection.py
+src/pipeline/steps/splitter.py
 src/pipeline/steps/training.py
+src/preprocessing_strategie/__init__.py
+src/preprocessing_strategie/evaluation.py
+src/preprocessing_strategie/feature_eng.py
+src/preprocessing_strategie/load.py
+src/preprocessing_strategie/missing_value copy.py
+src/preprocessing_strategie/missing_value.py
+src/preprocessing_strategie/outlier_detection.py
+src/preprocessing_strategie/splitter.py
+src/preprocessing_strategie/strategie_eng.py
+src/preprocessing_strategie/training.py
