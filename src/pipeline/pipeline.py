@@ -9,6 +9,7 @@ from src.pipeline.steps.load import split, load_data
 from src.pipeline.steps.training import training_Lg, training_Kn
 from src.pipeline.steps.evaluation import evaluation
 from src.pipeline.steps.missing_value import missing_value
+from src.pipeline.steps.outlier_detection import outlier_detection
 import pandas as pd
 
 
@@ -20,10 +21,11 @@ def my_pipeline():
     df = load_data()
 
     # missing values management
-    df = missing_value(df)
+    df_imputed = missing_value(df)
 
     # Outlier management
-
+    df_outliers = outlier_detection(df_imputed)
+    
     # # Split
     # x_train, x_test, y_train, y_test = split(df)  # ZenML décompose automatiquement le NamedTuple
 
