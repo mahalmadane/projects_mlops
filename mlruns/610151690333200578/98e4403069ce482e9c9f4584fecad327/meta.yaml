@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/610151690333200578/98e4403069ce482e9c9f4584fecad327/artifacts
+deleted_time: 1762181577203
+end_time: 1762176515988
+entry_point_name: ''
+experiment_id: '610151690333200578'
+lifecycle_stage: deleted
+run_id: 98e4403069ce482e9c9f4584fecad327
+run_name: Training Model
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762176503115
+status: 3
+tags: []
+user_id: Abba

@@ -1,21 +1,21 @@
 from zenml import step
-from sklearn.metrics import accuracy_score
-from typing import NamedTuple
+from sklearn.metrics import classification_report
+import mlflow
+import logging
 
-class Accuracy_and_BestScore(NamedTuple):
-    accuracy: dict
-    best_score: str
+logging.basicConfig(level=logging.INFO)
 
 @step
-def evaluation(model1, model2, X_test, y_test):
-    y_pred1 = model1.predict(X_test)
-    y_pred2 = model2.predict(X_test)
-    accuracy1 = accuracy_score(y_test, y_pred1)
-    accuracy2 = accuracy_score(y_test, y_pred2)
-    accuracy = {
-        "Logistic": accuracy1,
-        "K-Neighbors": accuracy2
-    }
-    best_score = max(accuracy, key=accuracy.get)
+def evaluation(X_test, y_test,model,run_id):
+    y_pred = model.predict(X_test)
+    report = classification_report(y_test, y_pred, output_dict=True)
+    with mlflow.start_run(run_id=run_id):
 
-    return Accuracy_and_BestScore(accuracy, best_score)
+        mlflow.log_metrics({
+            'accuracy': report['accuracy'],
+            'f1_score': report['macro avg']['f1-score'],
+            'precision': report['macro avg']['precision'],
+            'recall': report['macro avg']['recall']
+        })
+        
+    return report

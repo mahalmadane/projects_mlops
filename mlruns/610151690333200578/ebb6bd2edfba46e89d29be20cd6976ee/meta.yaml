@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/610151690333200578/ebb6bd2edfba46e89d29be20cd6976ee/artifacts
+deleted_time: 1762182064707
+end_time: 1762181257386
+entry_point_name: ''
+experiment_id: '610151690333200578'
+lifecycle_stage: deleted
+run_id: ebb6bd2edfba46e89d29be20cd6976ee
+run_name: KNeighborsClassifier_run_3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762181198189
+status: 3
+tags: []
+user_id: Abba
