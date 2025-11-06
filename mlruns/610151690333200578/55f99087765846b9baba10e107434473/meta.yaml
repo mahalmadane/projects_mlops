@@ -1,0 +1,14 @@
+artifact_uri: mlflow-artifacts:/610151690333200578/55f99087765846b9baba10e107434473/artifacts
+end_time: 1762438015786
+entry_point_name: ''
+experiment_id: '610151690333200578'
+lifecycle_stage: active
+run_id: 55f99087765846b9baba10e107434473
+run_name: LogisticRegression_run_1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1762438008495
+status: 3
+tags: []
+user_id: Abba

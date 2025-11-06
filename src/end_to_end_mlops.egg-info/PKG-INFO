@@ -14,5 +14,6 @@ Requires-Dist: seaborn
 Requires-Dist: zenml
 Requires-Dist: joblib
 Requires-Dist: mlflow
+Requires-Dist: logging
 
 # projects_mlops

@@ -57,7 +57,9 @@ def training_LogisticRegression(
 
         # training
         pipe.fit(X_train, y_train)
-        mlflow.sklearn.log_model(pipe, "model")
+        mlflow.sklearn.log_model(sk_model=pipe, name="model LogisticRegression", 
+                                 input_example=X_train.head(1),
+                                 registered_model_name="LogisticRegression")
         logging.info("Model LogisticRegression trained successfully")
         return pipe,run_id
 
@@ -103,6 +105,7 @@ def training_KNeighborsClassifier(
 
         # training
         pipe.fit(X_train, y_train)
-        mlflow.sklearn.log_model(pipe, "model")
+        mlflow.sklearn.log_model( sk_model=pipe,name="model",input_example=X_train.head(1),
+                                 registered_model_name="KNeighborsClassifier")
         logging.info("Model KNeighborsClassifier trained successfully")
         return pipe,run_id

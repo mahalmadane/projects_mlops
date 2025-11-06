@@ -1,0 +1,8 @@
+aliases:
+  challenger: '1'
+creation_timestamp: 1762438005410
+deployment_job_id: null
+deployment_job_state: null
+description: ''
+last_updated_timestamp: 1762443381723
+name: KNeighborsClassifier

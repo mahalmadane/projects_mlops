@@ -1,0 +1,15 @@
+creation_timestamp: 1762438005427
+current_stage: None
+deployment_job_state: null
+description: ''
+last_updated_timestamp: 1762438005427
+model_id: m-b5163f32ff074ce28586ad0a32bca0a0
+name: KNeighborsClassifier
+run_id: 29453ca6e6cf4beca497a251c7687517
+run_link: ''
+source: models:/m-b5163f32ff074ce28586ad0a32bca0a0
+status: READY
+status_message: null
+storage_location: mlflow-artifacts:/610151690333200578/models/m-b5163f32ff074ce28586ad0a32bca0a0/artifacts
+user_id: null
+version: 1

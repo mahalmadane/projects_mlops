@@ -29,10 +29,7 @@ src/pipeline/steps/training.py
 src/preprocessing_strategie/__init__.py
 src/preprocessing_strategie/evaluation.py
 src/preprocessing_strategie/feature_eng.py
-src/preprocessing_strategie/load.py
-src/preprocessing_strategie/missing_value copy.py
 src/preprocessing_strategie/missing_value.py
+src/preprocessing_strategie/model.py
 src/preprocessing_strategie/outlier_detection.py
-src/preprocessing_strategie/splitter.py
 src/preprocessing_strategie/strategie_eng.py
-src/preprocessing_strategie/training.py
