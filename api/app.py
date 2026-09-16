@@ -6,6 +6,8 @@ from typing import Optional
 from mlflow import MlflowClient
 from mlflow.exceptions import MlflowException
 
+mlflow.set_tracking_uri("http://localhost:5001")
+
 client=MlflowClient()
 
 # Nom du modèle MLflow et version

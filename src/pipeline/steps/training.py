@@ -11,7 +11,7 @@ import mlflow
 from typing import Tuple
 
 logging.basicConfig(level=logging.INFO)
-mlflow.set_tracking_uri("http://localhost:5000")
+mlflow.set_tracking_uri("http://localhost:5001")
 mlflow.set_experiment("ML Ops Experiment")
 
 

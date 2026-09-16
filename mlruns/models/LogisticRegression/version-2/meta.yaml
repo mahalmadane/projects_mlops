@@ -1,0 +1,15 @@
+creation_timestamp: 1789557776443
+current_stage: None
+deployment_job_state: null
+description: ''
+last_updated_timestamp: 1789557776443
+model_id: m-efc9717d22a049afac0540ab46ab0a6c
+name: LogisticRegression
+run_id: d6b0011660b442088c0c61de53f95018
+run_link: ''
+source: models:/m-efc9717d22a049afac0540ab46ab0a6c
+status: READY
+status_message: null
+storage_location: mlflow-artifacts:/610151690333200578/models/m-efc9717d22a049afac0540ab46ab0a6c/artifacts
+user_id: null
+version: 2

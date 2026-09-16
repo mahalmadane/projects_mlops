@@ -4,6 +4,7 @@ __pycache__/
 
 # Environnements virtuels
 env/
+env_streamlit/
 venv/
 
 # Logs et fichiers temporaires
