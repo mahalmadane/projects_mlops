@@ -176,6 +176,9 @@ def test_create_project(tmp_path):
     for pkg in ("mlstrat", "zenml", "mlflow", "pytest"):
         assert f"\n{pkg}\n" in reqs
     assert "pip install -r requirements.txt" in (root / "README.md").read_text()
+    for cfg in (root / "configs").glob("*.yaml"):
+        lines = [l for l in cfg.read_text().splitlines() if l.strip()]
+        assert lines and all(l.startswith("#") for l in lines), cfg
     for py in root.rglob("*.py"):
         compile(py.read_text(), str(py), "exec")
 

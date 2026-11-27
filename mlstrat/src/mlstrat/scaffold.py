@@ -30,6 +30,9 @@ scikit-learn
 matplotlib
 seaborn
 
+# --- Lecture des fichiers configs/*.yaml ---
+pyyaml
+
 # --- Notebooks ---
 jupyter
 
@@ -147,6 +150,187 @@ Projet créé avec [mlstrat](https://pypi.org/project/mlstrat/).
 """
 
 
+CONFIG_TEMPLATE = """\
+# =============================================================================
+# config.yaml : configuration générale du projet
+# =============================================================================
+# Tout est en commentaire : décommente (enlève le "# ") et adapte ce dont tu as
+# besoin. Tant que tout reste commenté, le fichier est valide mais vide.
+#
+# --- Exemple ---------------------------------------------------------------
+#
+# data:
+#   raw_path: data/raw/my_data.csv          # fichier d'origine
+#   processed_path: data/processed/data.csv # sortie du nettoyage
+#   target: target                          # colonne à prédire
+#   drop_columns: [id, name]                # colonnes inutiles pour le modèle
+#
+# split:
+#   test_size: 0.2                          # 20 % des lignes pour le test
+#   random_state: 42                        # même découpage à chaque run
+#   stratify: true                          # garde la proportion des classes
+#
+# preprocessing:
+#   missing_values:                         # stratégie par colonne
+#     age: median                           # mean | median | mode | min | max
+#     city: Unknown                         # ou une valeur constante
+#                                           # les autres colonnes : mean (numérique) ou mode
+#   outliers:
+#     factor: 1.5                           # bornes Q1 - 1.5*IQR / Q3 + 1.5*IQR
+#     exclude: [target]                     # colonnes à ne pas toucher
+#
+# mlflow:
+#   tracking_uri: http://localhost:5000     # serveur lancé avec `mlflow server`
+#   experiment_name: mon_experience
+#
+# --- Utilisation en Python -------------------------------------------------
+# (nécessite pyyaml : pip install pyyaml, déjà dans requirements.txt)
+#
+# import yaml
+# import pandas as pd
+# from mlstrat import MissingValueImputer, OutlierClipper
+#
+# with open("configs/config.yaml") as f:
+#     cfg = yaml.safe_load(f) or {}
+#
+# df = pd.read_csv(cfg["data"]["raw_path"])
+# df = df.drop(columns=cfg["data"]["drop_columns"])
+#
+# prep = cfg["preprocessing"]
+# df = MissingValueImputer(df).impute_all(prep["missing_values"]).get_df()
+# df = (
+#     OutlierClipper(df, factor=prep["outliers"]["factor"])
+#     .clip_all(exclude=prep["outliers"]["exclude"])
+#     .get_df()
+# )
+# df.to_csv(cfg["data"]["processed_path"], index=False)
+#
+# # Découpage train / test
+# from sklearn.model_selection import train_test_split
+# target = cfg["data"]["target"]
+# X, y = df.drop(columns=target), df[target]
+# X_train, X_test, y_train, y_test = train_test_split(
+#     X, y,
+#     test_size=cfg["split"]["test_size"],
+#     random_state=cfg["split"]["random_state"],
+#     stratify=y if cfg["split"]["stratify"] else None,
+# )
+#
+# # MLflow
+# import mlflow
+# mlflow.set_tracking_uri(cfg["mlflow"]["tracking_uri"])
+# mlflow.set_experiment(cfg["mlflow"]["experiment_name"])
+"""
+
+MODEL_PARAMS_TEMPLATE = """\
+# =============================================================================
+# model_params.yaml : modèles à entraîner et leurs hyperparamètres
+# =============================================================================
+# Tout est en commentaire : décommente et adapte. Chaque entrée de "models"
+# donne la classe scikit-learn ("class") et ses paramètres ("params").
+# Une liste de jeux de paramètres = un entraînement par jeu (pour comparer).
+#
+# --- Exemple ---------------------------------------------------------------
+#
+# models:
+#   logistic_regression:
+#     class: sklearn.linear_model.LogisticRegression
+#     params:
+#       - {C: 0.1, solver: liblinear}       # C petit = modèle plus simple
+#       - {C: 1.0, max_iter: 1000}
+#
+#   knn:
+#     class: sklearn.neighbors.KNeighborsClassifier
+#     params:
+#       - {n_neighbors: 3, weights: uniform}
+#       - {n_neighbors: 7, weights: distance}
+#
+#   random_forest:
+#     class: sklearn.ensemble.RandomForestClassifier
+#     params:
+#       - {n_estimators: 200, max_depth: 8, random_state: 42}
+#
+# metric: f1_score        # métrique pour choisir le meilleur modèle
+#                         # accuracy | f1_score | precision | recall
+#
+# --- Utilisation en Python -------------------------------------------------
+#
+# import importlib
+# import yaml
+# from mlstrat import ModelTrainer
+#
+# with open("configs/model_params.yaml") as f:
+#     cfg = yaml.safe_load(f) or {}
+#
+# def load_class(path):                     # "sklearn.svm.SVC" -> classe SVC
+#     module, name = path.rsplit(".", 1)
+#     return getattr(importlib.import_module(module), name)
+#
+# results = []
+# for model_name, spec in cfg["models"].items():
+#     model_class = load_class(spec["class"])
+#     for params in spec["params"]:
+#         trainer = ModelTrainer(model_class, **params).fit(X_train, y_train)
+#         scores = trainer.evaluate(X_test, y_test)
+#         results.append((model_name, params, scores, trainer))
+#
+# best = max(results, key=lambda r: r[2][cfg["metric"]])
+# print("Meilleur modèle :", best[0], best[1], best[2])
+"""
+
+PIPELINE_CONFIG_TEMPLATE = """\
+# =============================================================================
+# pipeline_config.yaml : configuration d'un run de pipeline ZenML
+# =============================================================================
+# Tout est en commentaire : décommente et adapte. Ce fichier suit le format
+# de configuration de ZenML : n'y ajoute pas de clés inventées (ZenML les
+# refuserait). Les réglages MLflow sont dans config.yaml.
+#
+# --- Exemple ---------------------------------------------------------------
+#
+# run_name: training_{date}_{time}   # nom du run dans le dashboard ZenML
+# enable_cache: false                # true = réutilise les étapes déjà calculées
+#
+# parameters:                        # arguments de la fonction @pipeline
+#   data_path: data/raw/my_data.csv
+#   target: target
+#
+# steps:                             # réglages étape par étape
+#   load_step:
+#     enable_cache: true             # le chargement peut rester en cache
+#   train_step:
+#     parameters:                    # arguments de la fonction @step
+#       n_neighbors: 5
+#   eval_step:
+#     enable_cache: false
+#
+# --- Utilisation en Python -------------------------------------------------
+# (dans src/pipelines/training_pipeline.py)
+#
+# from zenml import pipeline, step
+#
+# @step
+# def load_step(data_path: str) -> pd.DataFrame:
+#     return pd.read_csv(data_path)
+#
+# @step
+# def train_step(df: pd.DataFrame, target: str, n_neighbors: int = 3): ...
+#
+# @pipeline
+# def training_pipeline(data_path: str, target: str):
+#     df = load_step(data_path)
+#     train_step(df, target)
+#
+# if __name__ == "__main__":
+#     training_pipeline.with_options(
+#         config_path="configs/pipeline_config.yaml"
+#     )()
+#
+# Les valeurs de "parameters" et "steps.<nom>.parameters" sont passées
+# automatiquement aux fonctions : pas besoin de les écrire dans l'appel.
+"""
+
+
 def _notebook(title: str) -> str:
     nb = {
         "cells": [
@@ -227,9 +411,9 @@ def project_tree(name: str) -> Tree:
         },
         "reports": {"figures": None, "metrics.json": "{}\n"},
         "configs": {
-            "config.yaml": "# Configuration générale\ndata_path: data/raw/\n",
-            "model_params.yaml": "# Hyperparamètres du modèle\n",
-            "pipeline_config.yaml": "# Configuration des pipelines (ZenML, MLflow...)\n",
+            "config.yaml": CONFIG_TEMPLATE,
+            "model_params.yaml": MODEL_PARAMS_TEMPLATE,
+            "pipeline_config.yaml": PIPELINE_CONFIG_TEMPLATE,
         },
         "scripts": {
             "run_pipeline.py": '"""Lance le pipeline complet."""\n',
