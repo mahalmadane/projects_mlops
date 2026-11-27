@@ -31,7 +31,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"  {len(result.created)} fichiers créés")
         if result.skipped:
             print(f"  {len(result.skipped)} fichiers existants conservés (non écrasés)")
-        print(f"\nPour commencer :\n  cd {result.root}\n  python -m venv .venv && source .venv/bin/activate\n  pip install -e .")
+        print(
+            "\nPour commencer :\n"
+            f"  cd {result.root}\n"
+            "  python -m venv .venv && source .venv/bin/activate\n"
+            "  pip install -r requirements.txt   # dépendances (ZenML, MLflow... : à ajuster avant)\n"
+            "  pip install -e .                  # rend src/ importable, n'installe rien d'autre\n"
+            "\nDétails dans README.md."
+        )
     return 0
 
 

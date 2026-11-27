@@ -11,6 +11,142 @@ from typing import Dict, List, Union
 Tree = Dict[str, Union[str, None, "Tree"]]  # str = file content, None = empty folder, dict = folder
 
 
+REQUIREMENTS_TEMPLATE = """\
+# Dépendances du projet.
+#
+# Rien n'est installé automatiquement : `pip install -e .` installe seulement le code de src/.
+# Installe les dépendances toi-même :
+#
+#     pip install -r requirements.txt
+#
+# Commente (#) les lignes dont tu n'as pas besoin, et décommente les optionnelles.
+# Pour figer les versions qui marchent :  pip freeze > requirements.txt
+
+# --- Outils d'analyse et d'entraînement (EDA, nettoyage, modèles) ---
+mlstrat
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+
+# --- Notebooks ---
+jupyter
+
+# --- MLOps : pipelines et suivi des expériences ---
+zenml
+mlflow
+
+# --- Tests ---
+pytest
+
+# --- Optionnel : servir le modèle (API) et interface web ---
+# fastapi
+# uvicorn
+# streamlit
+"""
+
+PYPROJECT_TEMPLATE = """\
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "{name}"
+version = "0.1.0"
+requires-python = ">=3.9"
+# Volontairement vide : les dépendances sont dans requirements.txt
+# (pip install -r requirements.txt). Ainsi `pip install -e .` ne fait que
+# rendre le code de src/ importable, sans rien télécharger.
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+"""
+
+README_TEMPLATE = """\
+# {name}
+
+Description du projet : objectif, données utilisées, métrique visée.
+
+## Installation
+
+Prérequis : Python 3.9 ou plus récent.
+
+1. Créer et activer un environnement virtuel (une seule fois) :
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate        # Windows : .venv\\Scripts\\activate
+   ```
+
+2. Installer les dépendances listées dans `requirements.txt` :
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   Rien n'est installé automatiquement : ouvre `requirements.txt` et commente les
+   outils dont tu n'as pas besoin (par exemple `zenml` ou `mlflow`) avant de lancer
+   la commande.
+
+3. Rendre le code de `src/` importable depuis les notebooks et les scripts :
+
+   ```bash
+   pip install -e .
+   ```
+
+   Cette commande n'installe aucune dépendance, seulement le projet lui-même.
+
+## Utilisation
+
+1. Mettre les données brutes dans `data/raw/` (elles ne sont pas versionnées par git).
+2. Explorer avec `notebooks/01_exploration.ipynb` :
+
+   ```bash
+   jupyter notebook
+   ```
+
+3. Écrire le chargement et le nettoyage dans `src/data/`, l'entraînement dans `src/models/`.
+4. Lancer le pipeline complet :
+
+   ```bash
+   python scripts/run_pipeline.py
+   ```
+
+5. Lancer les tests :
+
+   ```bash
+   pytest
+   ```
+
+## Structure
+
+```
+{name}/
+├── data/
+│   ├── raw/            données d'origine, jamais modifiées
+│   ├── interim/        données en cours de transformation
+│   └── processed/      données prêtes pour l'entraînement
+├── notebooks/          exploration, prétraitement, essais de modèles
+├── src/
+│   ├── data/           load_data.py (chargement), preprocess.py (nettoyage)
+│   ├── features/       build_features.py (création de variables)
+│   ├── models/         train_model.py, evaluate.py, predict.py
+│   ├── utils/          fonctions utilitaires
+│   └── pipelines/      training_pipeline.py et ses étapes (steps/)
+├── configs/            config.yaml, model_params.yaml, pipeline_config.yaml
+├── reports/            figures/ et metrics.json
+├── scripts/            run_pipeline.py, train_local.py, deploy_model.py
+├── tests/              tests pytest
+├── requirements.txt    dépendances à installer
+└── pyproject.toml      rend src/ installable (pip install -e .)
+```
+
+Projet créé avec [mlstrat](https://pypi.org/project/mlstrat/).
+"""
+
+
 def _notebook(title: str) -> str:
     nb = {
         "cells": [
@@ -33,25 +169,9 @@ def _notebook(title: str) -> str:
 def project_tree(name: str) -> Tree:
     """The files and folders created by :func:`create_project`."""
     return {
-        "README.md": f"# {name}\n\nDescription du projet.\n\n"
-        "## Structure\n\n"
-        "- `data/` : données brutes (`raw`), intermédiaires (`interim`), prêtes (`processed`)\n"
-        "- `notebooks/` : exploration et essais\n"
-        "- `src/` : code du projet (données, features, modèles, pipelines)\n"
-        "- `configs/` : paramètres\n"
-        "- `reports/` : figures et métriques\n"
-        "- `tests/` : tests\n",
-        "pyproject.toml": "[build-system]\n"
-        'requires = ["setuptools>=68"]\n'
-        'build-backend = "setuptools.build_meta"\n\n'
-        "[project]\n"
-        f'name = "{name}"\n'
-        'version = "0.1.0"\n'
-        'requires-python = ">=3.9"\n'
-        'dependencies = ["mlstrat"]\n\n'
-        "[tool.setuptools.packages.find]\n"
-        'include = ["src*"]\n',
-        "requirements.txt": "mlstrat\n",
+        "README.md": README_TEMPLATE.replace("{name}", name),
+        "pyproject.toml": PYPROJECT_TEMPLATE.replace("{name}", name),
+        "requirements.txt": REQUIREMENTS_TEMPLATE,
         ".gitignore": "__pycache__/\n*.py[cod]\n*.log\n.venv/\nenv/\n.ipynb_checkpoints/\n"
         "data/**/*\n!data/**/.gitkeep\n",
         "data": {"raw": None, "interim": None, "processed": None},
