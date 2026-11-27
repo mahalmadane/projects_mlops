@@ -173,7 +173,8 @@ def test_create_project(tmp_path):
     assert nb["nbformat"] == 4
     assert "dependencies = []" in (root / "pyproject.toml").read_text()
     reqs = (root / "requirements.txt").read_text()
-    for pkg in ("mlstrat", "zenml", "mlflow", "pytest"):
+    assert "\nmlstrat @ git+https://github.com/" in reqs
+    for pkg in ("zenml", "mlflow", "pytest"):
         assert f"\n{pkg}\n" in reqs
     assert "pip install -r requirements.txt" in (root / "README.md").read_text()
     for cfg in (root / "configs").glob("*.yaml"):
@@ -193,3 +194,16 @@ def test_create_project(tmp_path):
     assert main(["new", "cli_demo", "--path", str(tmp_path)]) == 0
     assert (tmp_path / "cli_demo" / "pyproject.toml").exists()
     assert main(["new", "bad name", "--path", str(tmp_path)]) == 1
+
+
+def test_docs_page_and_cli(capsys):
+    from mlstrat.cli import docs_path, main
+
+    page = docs_path()
+    assert page.exists()
+    html = page.read_text(encoding="utf-8")
+    assert "mlstrat new mon_projet" in html and "pip3 install" in html
+    assert main(["docs", "--print"]) == 0
+    assert page.as_uri() in capsys.readouterr().out
+    assert main([]) == 0  # no command: prints help
+    assert "mlstrat docs" in capsys.readouterr().out

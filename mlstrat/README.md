@@ -3,9 +3,26 @@
 Start a machine learning project in one command, then explore, clean and model tabular
 data with ready-made tools built on pandas and scikit-learn.
 
+Install from GitHub (requires git):
+
 ```bash
-pip install mlstrat
+pip install "mlstrat @ git+https://github.com/mahalmadane/projects_mlops.git#subdirectory=mlstrat"
 ```
+
+To pin a version, add a tag or commit after `.git`, e.g. `projects_mlops.git@mlstrat-v0.1.0#subdirectory=mlstrat`.
+
+## Guide
+
+A step-by-step guide (in French) ships with the package and opens offline in your browser:
+
+```bash
+mlstrat docs
+```
+
+If the `mlstrat` command is not found (pip's script folder is not on your PATH), use
+`python3 -m mlstrat` instead, e.g. `python3 -m mlstrat new my_project`.
+
+To update, add `-U`: `pip install -U "mlstrat @ git+https://github.com/mahalmadane/projects_mlops.git#subdirectory=mlstrat"`.
 
 ## Create a project
 
@@ -29,7 +46,7 @@ my_project/
 
 ### Installing the generated project
 
-Nothing heavy is installed for you. `pip install mlstrat` only brings in the analysis stack
+Nothing heavy is installed for you. Installing mlstrat only brings in the analysis stack
 (pandas, scikit-learn, matplotlib, seaborn, scipy), never ZenML or MLflow. The generated project
 lists all its tools in `requirements.txt`, so you choose what to install:
 

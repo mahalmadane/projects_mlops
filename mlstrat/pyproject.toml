@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlstrat"
-version = "0.1.0"
+version = "0.2.0"
 description = "ML project scaffolding plus strategy-based tools for exploratory analysis, cleaning and model training on tabular data."
 readme = "README.md"
 license = "MIT"

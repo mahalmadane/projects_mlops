@@ -23,7 +23,8 @@ REQUIREMENTS_TEMPLATE = """\
 # Pour figer les versions qui marchent :  pip freeze > requirements.txt
 
 # --- Outils d'analyse et d'entraînement (EDA, nettoyage, modèles) ---
-mlstrat
+# mlstrat est installé depuis GitHub (il n'est pas encore sur PyPI)
+mlstrat @ git+https://github.com/mahalmadane/projects_mlops.git#subdirectory=mlstrat
 numpy
 pandas
 scikit-learn
@@ -146,7 +147,7 @@ Prérequis : Python 3.10 ou plus récent.
 └── pyproject.toml      rend src/ installable (pip install -e .)
 ```
 
-Projet créé avec [mlstrat](https://pypi.org/project/mlstrat/).
+Projet créé avec [mlstrat](https://github.com/mahalmadane/projects_mlops/tree/main/mlstrat).
 """
 
 

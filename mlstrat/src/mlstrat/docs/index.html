@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mlstrat : démarrer un projet de machine learning</title>
+<style>
+  :root {
+    --green: #15803d;
+    --green-dark: #0f5c2c;
+    --green-light: #e9f6ee;
+    --white: #ffffff;
+    --ink: #17261d;
+    --muted: #4b5d52;
+    --line: #cfe6d7;
+    --radius: 10px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--white);
+  }
+  a { color: var(--green); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+  }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+  .logo { font-weight: 700; font-size: 20px; color: var(--green); text-decoration: none; }
+  .logo span { color: var(--ink); }
+  nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 15px; }
+  nav a:hover { color: var(--green); }
+
+  /* Hero */
+  .hero { background: var(--green); color: var(--white); padding: 64px 0 56px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 42px); line-height: 1.2; margin: 0 0 14px; }
+  .hero p { font-size: 18px; margin: 0 0 28px; max-width: 620px; opacity: .95; }
+  .btn {
+    display: inline-block; background: var(--white); color: var(--green-dark);
+    padding: 12px 22px; border-radius: var(--radius); font-weight: 600; text-decoration: none;
+  }
+  .btn:hover { background: var(--green-light); }
+
+  /* Sections */
+  section { padding: 56px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 60px; }
+  section:nth-of-type(even) { background: var(--green-light); }
+  h2 { font-size: 28px; margin: 0 0 8px; }
+  .lead { color: var(--muted); margin: 0 0 28px; }
+  h3 { margin: 0 0 6px; font-size: 18px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px;
+  }
+  .card .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green); color: var(--white); font-weight: 700; margin-bottom: 10px;
+  }
+  .card p { margin: 0; color: var(--muted); }
+
+  /* Code */
+  .code { position: relative; margin: 12px 0 20px; }
+  pre {
+    margin: 0; padding: 16px 18px; overflow-x: auto;
+    background: var(--ink); color: #e7f3ea; border-radius: var(--radius);
+    font: 14px/1.55 var(--mono);
+  }
+  pre .c { color: #8fd3a5; }
+  code { font-family: var(--mono); font-size: .92em; background: var(--green-light); padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .copy {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--green); color: var(--white); border: 0; border-radius: 6px;
+    padding: 5px 10px; font-size: 13px; cursor: pointer;
+  }
+  .copy:hover { background: var(--green-dark); }
+
+  /* Steps */
+  ol.steps { list-style: none; padding: 0; margin: 0; counter-reset: step; }
+  ol.steps > li { position: relative; padding-left: 48px; margin-bottom: 26px; counter-increment: step; }
+  ol.steps > li::before {
+    content: counter(step); position: absolute; left: 0; top: 0;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green); color: var(--white); font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ol.steps p { margin: 4px 0 0; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: var(--radius); overflow: hidden; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--green); color: var(--white); font-weight: 600; }
+
+  .note {
+    border-left: 4px solid var(--green); background: var(--white);
+    padding: 12px 16px; border-radius: 0 var(--radius) var(--radius) 0; margin: 16px 0;
+  }
+  details { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 12px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { margin-bottom: 8px; }
+
+  footer { padding: 28px 0; color: var(--muted); font-size: 14px; text-align: center; }
+  @media (max-width: 600px) { nav { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#top">ml<span>strat</span></a>
+    <nav aria-label="Sections">
+      <a href="#quoi">Ce que ça fait</a>
+      <a href="#installer">Installer</a>
+      <a href="#creer">Créer un projet</a>
+      <a href="#configs">Configs</a>
+      <a href="#outils">Outils</a>
+      <a href="#aide">Aide</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div class="wrap">
+    <h1>Démarre un projet de machine learning en une commande.</h1>
+    <p>mlstrat crée la structure complète de ton projet (dossiers, notebooks, configs commentées)
+      et te donne des outils prêts à l'emploi pour explorer, nettoyer et modéliser tes données.</p>
+    <a class="btn" href="#installer">Commencer</a>
+  </div>
+</div>
+
+<main>
+
+<section id="quoi">
+  <div class="wrap">
+    <h2>Ce que fait mlstrat</h2>
+    <p class="lead">Deux choses : préparer ton projet, puis t'aider à travailler dedans.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="num">1</div>
+        <h3>Structure de projet</h3>
+        <p><code>mlstrat new</code> crée tous les dossiers d'un projet ML propre : données, notebooks, code, tests, rapports.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h3>Configs commentées</h3>
+        <p>Chaque fichier de <code>configs/</code> contient un exemple concret et le code Python pour s'en servir, en commentaire.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3>Outils d'analyse</h3>
+        <p>Exploration des données, valeurs manquantes, outliers et entraînement de modèles scikit-learn en quelques lignes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="installer">
+  <div class="wrap">
+    <h2>Installer</h2>
+    <p class="lead">Il faut Python 3.10 ou plus récent, et git.</p>
+    <div class="code"><pre><code>pip3 install "git+https://github.com/mahalmadane/projects_mlops.git#subdirectory=mlstrat"</code></pre></div>
+    <p>Pour vérifier que tout est bien installé :</p>
+    <div class="code"><pre><code>mlstrat --version</code></pre></div>
+    <div class="note"><strong>Mettre à jour vers la dernière version :</strong> ajoute <code>-U</code> à la commande d'installation.
+      <div class="code"><pre><code>pip3 install -U "git+https://github.com/mahalmadane/projects_mlops.git#subdirectory=mlstrat"</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section id="creer">
+  <div class="wrap">
+    <h2>Créer un projet</h2>
+    <p class="lead">De zéro à un projet prêt à coder, en 5 étapes.</p>
+    <ol class="steps">
+      <li>
+        <h3>Créer la structure</h3>
+        <div class="code"><pre><code>mlstrat new mon_projet
+cd mon_projet</code></pre></div>
+      </li>
+      <li>
+        <h3>Créer l'environnement virtuel</h3>
+        <p>Un environnement par projet, pour ne pas mélanger les versions.</p>
+        <div class="code"><pre><code>python3 -m venv .venv
+source .venv/bin/activate        <span class="c"># Windows : .venv\Scripts\activate</span></code></pre></div>
+      </li>
+      <li>
+        <h3>Choisir ses outils</h3>
+        <p>Ouvre <code>requirements.txt</code> et mets un <code>#</code> devant ce dont tu n'as pas besoin
+          (par exemple <code>zenml</code> ou <code>mlflow</code>). Rien n'est installé sans ton accord.</p>
+      </li>
+      <li>
+        <h3>Installer les dépendances</h3>
+        <div class="code"><pre><code>pip install -r requirements.txt
+pip install -e .                 <span class="c"># rend src/ importable, n'installe rien d'autre</span></code></pre></div>
+      </li>
+      <li>
+        <h3>Ajouter tes données et commencer</h3>
+        <p>Mets ton fichier dans <code>data/raw/</code>, puis ouvre le premier notebook.</p>
+        <div class="code"><pre><code>jupyter notebook notebooks/01_exploration.ipynb</code></pre></div>
+      </li>
+    </ol>
+
+    <h3 style="margin-top:12px">Ce qui est créé</h3>
+    <div class="code"><pre><code>mon_projet/
+├── data/
+│   ├── raw/            <span class="c"># données d'origine, jamais modifiées</span>
+│   ├── interim/        <span class="c"># données en cours de transformation</span>
+│   └── processed/      <span class="c"># données prêtes pour l'entraînement</span>
+├── notebooks/          <span class="c"># exploration, prétraitement, entraînement</span>
+├── src/
+│   ├── data/           <span class="c"># chargement et nettoyage</span>
+│   ├── features/       <span class="c"># création de variables</span>
+│   ├── models/         <span class="c"># entraînement, évaluation, prédiction</span>
+│   ├── utils/
+│   └── pipelines/      <span class="c"># pipeline et ses étapes</span>
+├── configs/            <span class="c"># config.yaml, model_params.yaml, pipeline_config.yaml</span>
+├── reports/            <span class="c"># figures et métriques</span>
+├── scripts/            <span class="c"># lancer, entraîner, déployer</span>
+├── tests/
+├── requirements.txt    <span class="c"># dépendances à installer</span>
+├── pyproject.toml
+└── README.md           <span class="c"># guide d'installation du projet</span></code></pre></div>
+    <p>Si un fichier existe déjà, il n'est <strong>jamais écrasé</strong> : tu peux relancer <code>mlstrat new</code>
+      sur un projet existant pour ajouter ce qui manque.</p>
+  </div>
+</section>
+
+<section id="configs">
+  <div class="wrap">
+    <h2>Les fichiers de configuration</h2>
+    <p class="lead">Tout est en commentaire. Décommente (enlève le <code># </code>) et adapte ce dont tu as besoin.</p>
+    <table>
+      <thead><tr><th>Fichier</th><th>Exemple fourni</th><th>Utilisation montrée</th></tr></thead>
+      <tbody>
+        <tr><td><code>config.yaml</code></td><td>Chemins des données, colonne cible, découpage train/test, valeurs manquantes, outliers, MLflow</td><td>Charger, nettoyer, enregistrer et découper les données</td></tr>
+        <tr><td><code>model_params.yaml</code></td><td>Plusieurs modèles et leurs hyperparamètres, métrique de choix</td><td>Entraîner chaque modèle et garder le meilleur</td></tr>
+        <tr><td><code>pipeline_config.yaml</code></td><td>Run ZenML : nom, cache, paramètres par étape</td><td>Lancer un pipeline ZenML avec cette config</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:20px">Extrait de <code>configs/config.yaml</code> :</p>
+    <div class="code"><pre><code><span class="c"># preprocessing:
+#   missing_values:                         # stratégie par colonne
+#     age: median                           # mean | median | mode | min | max
+#     city: Unknown                         # ou une valeur constante
+#   outliers:
+#     factor: 1.5                           # bornes Q1 - 1.5*IQR / Q3 + 1.5*IQR
+#     exclude: [target]                     # colonnes à ne pas toucher</span></code></pre></div>
+  </div>
+</section>
+
+<section id="outils">
+  <div class="wrap">
+    <h2>Utiliser les outils</h2>
+    <p class="lead">Dans un notebook ou un script, une fois les dépendances installées.</p>
+    <div class="code"><pre><code>import pandas as pd
+from mlstrat import DataOverview, MissingValueImputer, OutlierClipper, ModelTrainer
+from sklearn.linear_model import LogisticRegression
+
+df = pd.read_csv("data/raw/mes_donnees.csv")
+
+<span class="c"># 1. Voir l'état des données : type, valeurs manquantes, valeurs uniques</span>
+DataOverview().report(df)
+
+<span class="c"># 2. Nettoyer (le DataFrame d'origine n'est pas modifié)</span>
+df = MissingValueImputer(df).impute("age", "median").impute_all().get_df()
+df = OutlierClipper(df).clip_all(exclude=["target"]).get_df()
+
+<span class="c"># 3. Entraîner et évaluer</span>
+trainer = ModelTrainer(LogisticRegression, max_iter=1000).fit(X_train, y_train)
+trainer.evaluate(X_test, y_test)   <span class="c"># accuracy, f1_score, precision, recall</span></code></pre></div>
+    <div class="cards">
+      <div class="card"><h3>Explorer</h3><p><code>DataOverview</code>, <code>univariate_strategy</code>, <code>bivariate_strategy</code>, <code>MultivariateAnalyzer</code></p></div>
+      <div class="card"><h3>Nettoyer</h3><p><code>MissingValueImputer</code>, <code>OutlierClipper</code></p></div>
+      <div class="card"><h3>Modéliser</h3><p><code>ModelTrainer</code>, <code>build_preprocessor</code>, <code>make_model_pipeline</code></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="aide">
+  <div class="wrap">
+    <h2>Problèmes fréquents</h2>
+    <p class="lead">Les solutions aux blocages les plus courants.</p>
+    <details>
+      <summary>« command not found: mlstrat »</summary>
+      <p>Le dossier où pip installe les commandes n'est pas dans ton PATH. Utilise cette forme, qui marche toujours :</p>
+      <div class="code"><pre><code>python3 -m mlstrat.cli new mon_projet</code></pre></div>
+    </details>
+    <details>
+      <summary>Mes fichiers de config sont presque vides</summary>
+      <p>Tu as une ancienne version. Mets à jour, supprime les anciens fichiers de config, puis relance
+        (seuls les fichiers manquants sont recréés) :</p>
+      <div class="code"><pre><code>pip3 install -U "git+https://github.com/mahalmadane/projects_mlops.git#subdirectory=mlstrat"
+rm mon_projet/configs/*.yaml
+mlstrat new mon_projet</code></pre></div>
+    </details>
+    <details>
+      <summary>L'installation de requirements.txt est longue</summary>
+      <p>ZenML et MLflow sont gros. Si tu ne t'en sers pas, commente leurs lignes dans <code>requirements.txt</code> avant d'installer.</p>
+    </details>
+    <details>
+      <summary>Revoir cette page</summary>
+      <p>Elle est incluse dans mlstrat et s'ouvre hors ligne :</p>
+      <div class="code"><pre><code>mlstrat docs</code></pre></div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  mlstrat · licence MIT ·
+  <a href="https://github.com/mahalmadane/projects_mlops/tree/main/mlstrat">code source sur GitHub</a>
+</footer>
+
+<script>
+  // Bouton "Copier" sur chaque bloc de commande
+  document.querySelectorAll(".code").forEach(function (block) {
+    var btn = document.createElement("button");
+    btn.className = "copy";
+    btn.type = "button";
+    btn.textContent = "Copier";
+    btn.addEventListener("click", function () {
+      var text = block.querySelector("pre").innerText;
+      var done = function () {
+        btn.textContent = "Copié ✓";
+        setTimeout(function () { btn.textContent = "Copier"; }, 1500);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done);
+      } else {
+        var area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+        done();
+      }
+    });
+    block.appendChild(btn);
+  });
+</script>
+</body>
+</html>
