@@ -18,3 +18,9 @@ secrets.json
 # IDE / éditeur
 .vscode/
 .idea/
+
+# Build de la bibliothèque mlstrat
+mlstrat/dist/
+mlstrat/build/
+*.egg-info/
+.pytest_cache/
