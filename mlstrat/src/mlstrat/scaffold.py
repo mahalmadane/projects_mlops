@@ -57,7 +57,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "{name}"
 version = "0.1.0"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 # Volontairement vide : les dépendances sont dans requirements.txt
 # (pip install -r requirements.txt). Ainsi `pip install -e .` ne fait que
 # rendre le code de src/ importable, sans rien télécharger.
@@ -74,7 +74,7 @@ Description du projet : objectif, données utilisées, métrique visée.
 
 ## Installation
 
-Prérequis : Python 3.9 ou plus récent.
+Prérequis : Python 3.10 ou plus récent.
 
 1. Créer et activer un environnement virtuel (une seule fois) :
 
