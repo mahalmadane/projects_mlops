@@ -27,6 +27,26 @@ my_project/
 └── README.md
 ```
 
+### Installing the generated project
+
+Nothing heavy is installed for you. `pip install mlstrat` only brings in the analysis stack
+(pandas, scikit-learn, matplotlib, seaborn, scipy), never ZenML or MLflow. The generated project
+lists all its tools in `requirements.txt`, so you choose what to install:
+
+```bash
+cd my_project
+python -m venv .venv && source .venv/bin/activate
+# edit requirements.txt first: comment out what you don't need (zenml, mlflow, jupyter...)
+pip install -r requirements.txt
+pip install -e .        # makes src/ importable; installs no dependencies
+```
+
+| File | Role |
+|---|---|
+| `requirements.txt` | Every dependency, grouped and commented: analysis, notebooks, MLOps (ZenML, MLflow), tests, optional API/UI (FastAPI, Streamlit) |
+| `pyproject.toml` | Empty `dependencies` on purpose, so `pip install -e .` downloads nothing |
+| `README.md` | Step-by-step installation, usage and folder-by-folder description |
+
 Existing files are never overwritten, so `mlstrat new` can also fill in the missing pieces of
 an existing project. From Python: `from mlstrat import create_project; create_project("my_project")`.
 

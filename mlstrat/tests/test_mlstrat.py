@@ -171,6 +171,11 @@ def test_create_project(tmp_path):
     assert (root / "src" / "pipelines" / "steps" / "__init__.py").exists()
     nb = json.loads((root / "notebooks" / "01_exploration.ipynb").read_text())
     assert nb["nbformat"] == 4
+    assert "dependencies = []" in (root / "pyproject.toml").read_text()
+    reqs = (root / "requirements.txt").read_text()
+    for pkg in ("mlstrat", "zenml", "mlflow", "pytest"):
+        assert f"\n{pkg}\n" in reqs
+    assert "pip install -r requirements.txt" in (root / "README.md").read_text()
     for py in root.rglob("*.py"):
         compile(py.read_text(), str(py), "exec")
 
